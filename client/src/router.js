@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Fetch from './components/fetch.vue';
 import Todos from './components/todos.vue';
+// import Confirmation from './components/Confirmation.vue';
 
 Vue.use(Router);
 
@@ -33,5 +34,12 @@ export default new Router({
       name: 'todos',
       component: Todos,
     },
+
+    // {
+    //   path: '/confirmation',
+    //   name: 'confirmation',
+    //   component: Confirmation,
+    // },
+
   ],
 });

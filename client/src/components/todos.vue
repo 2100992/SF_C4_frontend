@@ -2,6 +2,7 @@
   <div class="container">
     <div class="col-sm-10">
       <h1>Задачи</h1>
+      <confirmation></confirmation>
       <button type="button"
               id="task-add"
               class="btn btn-success btn-sm align-left d-block"
@@ -84,9 +85,10 @@ h1, td {
 
 <script>
 import axios from 'axios';
+import Confirmation from './Confirmation.vue';
 
 const todoListURL = 'http://localhost:8000/api/tasks/';
-const todoAddURL = 'http://localhost:8000/api/add-task/';
+// const todoAddURL = 'http://localhost:8000/api/tasks/';
 
 export default {
   name: 'Todo',
@@ -120,7 +122,7 @@ export default {
         description: this.addTodoForm.description,
         is_completed: this.addTodoForm.is_completed[0],
       };
-      axios.post(todoAddURL, requestData)
+      axios.post(todoListURL, requestData)
         .then(() => {
           this.getTodos();
         })
@@ -134,7 +136,11 @@ export default {
     },
 
   },
-  
+
+  components: {
+    confirmation: Confirmation
+  },
+
   created() {
       this.getTodos()
   },
