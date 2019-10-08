@@ -1,8 +1,18 @@
 <template>
   <div class="container">
-    <div class="col-sm-10">
+    <div class="col-sm">
       <h1>Задачи</h1>
-      <confirmation></confirmation>
+
+      <!-- <confirmation
+        :message="confirmationMessage"
+        v-if="showConfirmation">
+      </confirmation> -->
+
+      <confirmation
+        :message="confirmationMessage"
+        :showCollapse="showConfirmation">
+      </confirmation>
+
       <button type="button"
               id="task-add"
               class="btn btn-success btn-sm align-left d-block"
@@ -88,19 +98,22 @@ import axios from 'axios';
 import Confirmation from './Confirmation.vue';
 
 const todoListURL = 'http://localhost:8000/api/tasks/';
-// const todoAddURL = 'http://localhost:8000/api/tasks/';
 
 export default {
   name: 'Todo',
+
   data() {
       return {
           todos: [],
           addTodoForm: {
             description: '',
             is_completed: [],
-          }
+          },
+          confirmationMessage: '',
+          showConfirmation: false,
       };
   },
+
   methods: {
     
     getTodos() {
@@ -125,8 +138,12 @@ export default {
       axios.post(todoListURL, requestData)
         .then(() => {
           this.getTodos();
-        })
-      this.resetForm()
+          this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
+          // this.showConfirmation = true;
+          this.showConfirmation = true;
+          setTimeout(() => {this.showConfirmation = false}, 2000);
+        });
+      this.resetForm();
     },
     
     onReset(event) {
@@ -138,7 +155,7 @@ export default {
   },
 
   components: {
-    confirmation: Confirmation
+    confirmation: Confirmation,
   },
 
   created() {

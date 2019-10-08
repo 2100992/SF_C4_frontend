@@ -34,12 +34,10 @@ export default new Router({
       name: 'todos',
       component: Todos,
     },
-
-    // {
-    //   path: '/confirmation',
-    //   name: 'confirmation',
-    //   component: Confirmation,
-    // },
-
+    {
+      path: '/tsttodos',
+      name: 'Tests',
+      component: TSTTodos,
+    },
   ],
 });
