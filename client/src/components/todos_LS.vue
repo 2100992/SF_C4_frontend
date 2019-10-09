@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="col-sm">
-      <h1>Задачи</h1>
-
-      <confirmation :message="confirmationMessage" :showCollapse="showConfirmation"></confirmation>
+      <yourname v-on:uname="getTodos"></yourname>
+      <p>{{ name }}</p>
+      <h3>Ваши текущие задачи (локально)</h3>
 
       <button
         type="button"
@@ -12,8 +12,10 @@
         v-b-modal.todo-modal
       >Добавить задачу</button>
 
-      <table class="table table-dark table-stripped table-hover">
-        <thead class="thead-light">
+      <confirmation :message="confirmationMessage" :showCollapse="showConfirmation"></confirmation>
+      
+      <table class="table table-bordered">
+        <thead class="">
           <tr>
             <th>Uid</th>
             <th>Описание</th>
@@ -74,7 +76,7 @@ button#task-add {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-h1,
+h1,h2,h3
 td {
   text-align: left;
 }
@@ -84,10 +86,10 @@ td {
 </style>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import Confirmation from "./Confirmation.vue";
-
-const todoListURL = "http://localhost:8000/api/tasks/";
+import yourname from "./yourName.vue";
+// const todoListURL = "http://localhost:8000/api/tasks/";
 
 export default {
   name: "Todo",
@@ -95,20 +97,24 @@ export default {
   data() {
     return {
       todos: [],
+
       addTodoForm: {
         description: "",
         is_completed: []
       },
+
       confirmationMessage: "",
       showConfirmation: false
     };
   },
 
   methods: {
-    getTodos() {
-      axios.get(todoListURL).then(response => {
-        this.todos = response.data.tasks;
-      });
+    getTodos(uname) {
+      // axios.get(todoListURL).then(response => {
+      //   this.todos = response.data.tasks;
+      // });
+      this.todos = localStorage.getItem(uname);
+      this.name = uname
     },
 
     resetForm() {
@@ -123,15 +129,23 @@ export default {
         description: this.addTodoForm.description,
         is_completed: this.addTodoForm.is_completed[0]
       };
-      axios.post(todoListURL, requestData).then(() => {
-        this.getTodos();
-        this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
-        // this.showConfirmation = true;
-        this.showConfirmation = true;
-        setTimeout(() => {
-          this.showConfirmation = false;
-        }, 2000);
-      });
+      // axios.post(todoListURL, requestData).then(() => {
+      //   this.getTodos();
+      //   this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
+      //   this.showConfirmation = true;
+      //   setTimeout(() => {
+      //     this.showConfirmation = false;
+      //   }, 2000);
+      // });
+
+      localStorage.setItem("uname", requestData);
+      this.getTodos();
+      this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
+      this.showConfirmation = true;
+      setTimeout(() => {
+        this.showConfirmation = false;
+      }, 2000);
+
       this.resetForm();
     },
 
@@ -143,7 +157,8 @@ export default {
   },
 
   components: {
-    confirmation: Confirmation
+    confirmation: Confirmation,
+    yourname: yourname
   },
 
   created() {

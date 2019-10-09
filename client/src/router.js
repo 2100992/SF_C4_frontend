@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Fetch from './components/fetch.vue';
 import Todos from './components/todos.vue';
-// import Confirmation from './components/Confirmation.vue';
+import TodosLS from './components/todos_LS.vue';
 
 Vue.use(Router);
 
@@ -35,9 +35,9 @@ export default new Router({
       component: Todos,
     },
     {
-      path: '/tsttodos',
-      name: 'Tests',
-      component: TSTTodos,
+      path: '/todos_LS',
+      name: 'todosLS',
+      component: TodosLS,
     },
   ],
 });
