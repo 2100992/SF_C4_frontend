@@ -24,8 +24,8 @@
 
         <tbody>
           <tr v-for="(todo, index) in todos" :key="index">
-            <td class="todo-uid">{{ todo.uid }}</td>
-            <td>{{ todo.description }}</td>
+            <td class="todo-uid">{{ todo.id }}</td>
+            <td>{{ todo.desc }}</td>
             <td>
               <span v-if="todo.is_completed">Выполнено</span>
               <span v-else>Не выполнено</span>
@@ -121,12 +121,12 @@ export default {
       this.$refs.addTodoModal.hide();
       const requestData = {
         description: this.addTodoForm.description,
-        is_completed: this.addTodoForm.is_completed[0]
+        is_completed: this.addTodoForm.is_completed[0],
+        uid: uuid
       };
       axios.post(todoListURL, requestData).then(() => {
         this.getTodos();
         this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
-        // this.showConfirmation = true;
         this.showConfirmation = true;
         setTimeout(() => {
           this.showConfirmation = false;
@@ -139,6 +139,16 @@ export default {
       event.preventDefault();
       this.$refs.addTodoModal.hide();
       this.resetForm();
+    },
+
+    uuidv4() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
     }
   },
 
