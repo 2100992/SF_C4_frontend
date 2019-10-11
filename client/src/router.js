@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
+import Home from './components/Home.vue';
 import Fetch from './components/fetch.vue';
 import Todos from './components/todos.vue';
 import TodosLS from './components/todos_LS.vue';

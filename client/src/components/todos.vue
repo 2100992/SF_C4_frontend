@@ -58,9 +58,6 @@
           ></b-form-input>
         </b-form-group>
         <b-form-group id="form-complete-group">
-          <b-form-checkbox-group v-model="addTodoForm.is_completed" id="form-checks">
-            <b-form-checkbox value="true">Задача выполнена?</b-form-checkbox>
-          </b-form-checkbox-group>
         </b-form-group>
         <b-button type="submit" variant="primary">Добавить</b-button>
         <b-button type="reset" variant="danger">Сброс</b-button>
