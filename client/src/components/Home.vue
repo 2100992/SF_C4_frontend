@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <username :name="userName" v-on:uname="getTodos"></username>
+        <username :name="userName" :showCollapse="showNameRequest" v-on:uname="getTodos" v-on:resetPage="resetPage"></username>
         <confirmation :message="confirmationMessage" :showCollapse="showConfirmation"></confirmation>
         <tototable v-if="userName" :todos="todos"></tototable>
     </div>
@@ -24,22 +24,33 @@ export default {
         return {
             todos: {},
             confirmationMessage: "",
-            showConfirmation: false
+            showConfirmation: false,
+            showNameRequest: false,
+
         };
     },
 
     methods: {
         getTodos() {
-            axios.get(todoListURL).then(response => {
+            axios.get(`${todoListURL}${this.userName}`).then(response => {
                 this.todos = response.data.tasks;
             });
         },
         getUserName() {
             this.userName = localStorage.getItem("userName");
             if (this.userName != null) {
+                this.showNameRequest = false;
                 console.log(`userName = ${this.userName}`)
                 this.getTodos();
-            }
+                }
+            else {
+                this.showNameRequest = true;
+            };
+            
+        },
+        resetPage() {
+            this.getUserName();
+            console.log(`Получили событие resetPage`)
         }
     },
 
