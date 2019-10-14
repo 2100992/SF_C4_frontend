@@ -38,15 +38,24 @@ export default {
             confirmationMessage: "",
             showConfirmation: false,
             showNameRequest: false,
-            todoListURL: todoListURL,
+            todoListURL: todoListURL
         };
     },
 
     methods: {
         getTodos() {
-            axios.get(`${todoListURL}${this.userName}`).then(response => {
-                this.todos = response.data.tasks;
-            });
+            axios
+                .get(`${todoListURL}${this.userName}`)
+                .then(response => {
+                    this.todos = response.data.tasks;
+                })
+                .catch(error => {
+                    this.confirmationMessage = `Ошибка подключения к серверу "${error}". Попробуйте позднее.`;
+                    this.showConfirmation = true;
+                    setTimeout(() => {
+                        this.showConfirmation = false;
+                    }, 5000);
+                });
         },
         getUserName() {
             this.userName = localStorage.getItem("userName");

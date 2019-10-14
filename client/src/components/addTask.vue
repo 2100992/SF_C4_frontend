@@ -56,6 +56,7 @@ export default {
                 .post(this.todoListURL + this.userName, requestData)
                 .then(() => {
                     this.$emit("addedTask", this.addTodoForm.description);
+                    this.resetForm();
                 });
         },
         onReset(event) {

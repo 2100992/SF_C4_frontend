@@ -2,30 +2,24 @@
     <table class="table table-bordered">
         <thead class>
             <tr>
-                <th>Uid</th>
-                <th>Описание</th>
-                <th>Выполнена?</th>
-                <th></th>
+                <th>№</th>
+                <th>Задача</th>
+                <th>Выполнить</th>
+                <th>Удалить</th>
             </tr>
         </thead>
 
         <tbody>
             <tr v-for="(todo, index) in todos" :key="index">
-                <td class="todo-uid">{{ todo.id }}</td>
-                <td>{{ todo.desc }}</td>
-                <td>
-                    <span v-if="todo.is_completed">Выполнено</span>
-                    <span v-else>Не выполнено</span>
+                <td v-bind:class="todo.uid" class="todo-uid">{{ todo.id }}</td>
+                <td v-bind:class="todo.uid" v-on:dblclick="testAllert">{{ todo.desc }}</td>
+                <td v-bind:class="todo.uid" class="complTask">
+                    <b-form-checkbox v-bind:class="todo.uid" switch size="lg"></b-form-checkbox>
+                    <!-- <span v-if="todo.is_completed">Выполнено</span>
+                    <span v-else>Не выполнено</span>-->
                 </td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-secondary btn-sm">Обновить</button>
-                        &nbsp;
-                        <button
-                            type="button"
-                            class="btn btn-danger btn-sm"
-                        >X</button>
-                    </div>
+                <td v-bind:class="todo.uid" class="delTask">
+                    <button type="button" class="btn btn-danger btn-sm">X</button>
                 </td>
             </tr>
         </tbody>
@@ -33,11 +27,6 @@
 </template>
 
 <style scoped>
-button#task-add {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
 h1,
 h2,
 h3,
@@ -45,14 +34,20 @@ td {
     text-align: left;
 }
 
-.todo-uid {
+.todo-uid,
+.complTask,
+.delTask {
     text-align: center;
 }
-
 </style>
 
 <script>
 export default {
-    props: ["todos"]
+    props: ["todos"],
+    methods: {
+        testAllert() {
+            alert("click");
+        }
+    }
 };
 </script>
