@@ -4,25 +4,30 @@
         Компонент работы с именем пользователя
         - выводим приветствие с именем, если оно есть в LocalStorage
         - выводим форму, если имя неизвестно. по вооду сохраняем его в LS
-        --------------------------------------------------------------------
-        -->
+        -------------------------------------------------------------------------->
         <username
             :name="userName"
             :showCollapse="showNameRequest"
             v-on:uname="getTodos"
             v-on:resetPage="resetPage"
         ></username>
+        <!------------------------------------------------------------------------>
         <!-- 
         Компонент выводящий модальное окно с формой для заведения новой задачи
         - для активации модального окна нужно нажать на соответствующую кнопку
-        -------------------------------------------------------------------- 
-        -->
+        -------------------------------------------------------------------------->
         <addTask
             v-if="userName"
             v-on:addedTask="addedTask"
             :userName="userName"
             :todoListURL="todoListURL"
         ></addTask>
+        <!------------------------------------------------------------------------>
+        <!--
+        модальное окно для изменения задачи 
+        -------------------------------------------------------------------------->
+        <changetask :id="id" v-on:uname="getTodos" v-on:resetPage="resetPage"></changetask>
+        <!------------------------------------------------------------------------>
         <!-- 
         Компонент с различными уведомлениями
         - над таблицей создаем collapse элемент с различными сообщениями
@@ -30,14 +35,19 @@
         -------------------------------------------------------------------- 
         -->
         <confirmation :message="confirmationMessage" :showCollapse="showConfirmation"></confirmation>
+        <!------------------------------------------------------------------------>
         <!-- 
         Компонент таблицы с задачами
         - по двойному клику на текст задачи открываем модальное окно с возможностью изменения
         - чекбокс с возможностью "Выполнить" задачу
         - кнопка удаления с модальнымм окном подтверждения удалинея
-        -------------------------------------------------------------------- 
-        -->
-        <tototable v-if="userName" :todos="todos" v-on:resetPage="resetPage"></tototable>
+        -------------------------------------------------------------------------->
+        <todotable
+            v-if="userName"
+            :todos="todos"
+            v-on:changeThisTask="changeThisTask"
+        ></todotable>
+        <!------------------------------------------------------------------------>
     </div>
 </template>
 
@@ -52,6 +62,7 @@ import userName from "./userName.vue";
 import addTask from "./addTask.vue";
 
 const todoListURL = "http://localhost:8000/api/tasks/";
+import changeTask from "./changeTask.vue";
 
 export default {
     name: "Home",
@@ -62,7 +73,9 @@ export default {
             confirmationMessage: "",
             showConfirmation: false,
             showNameRequest: false,
-            todoListURL: todoListURL
+            todoListURL: todoListURL,
+            id: "",
+
         };
     },
 
@@ -102,14 +115,19 @@ export default {
             setTimeout(() => {
                 this.showConfirmation = false;
             }, 2000);
+        },
+        changeThisTask(id) {
+            this.id = id
+            console.log(`changeThisTask id = ${id}`);
         }
     },
 
     components: {
         confirmation: Confirmation,
-        tototable: todoTable,
+        todotable: todoTable,
         username: userName,
-        addTask: addTask
+        addTask: addTask,
+        changetask: changeTask
     },
 
     created() {

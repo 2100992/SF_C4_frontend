@@ -1,30 +1,8 @@
 <template>
     <div>
-        <!-- модальное окно для изменения задачи 
-        !!! ToDo - вынести в отдельный компонент
-        ---------------------------------------------------------------------->
-        <b-modal ref="changeTodoModal" id="change-modal" title="Изменить задачу" hide-footer>
-            <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-                <b-form-group
-                    id="form-description-group"
-                    label="Описание:"
-                    label-for="form-description-input"
-                >
-                    <b-form-input
-                        id="form-description-input"
-                        type="text"
-                        v-model="addTodoForm.description"
-                        required
-                        placeholder="Изменить задачу"
-                    ></b-form-input>
-                </b-form-group>
-                <b-form-group id="form-complete-group"></b-form-group>
-                <b-button type="submit" variant="primary">Изменить</b-button>
-                <b-button type="reset" variant="danger">Сброс</b-button>
-            </b-form>
-        </b-modal>
-        <!-- таблица с задачами 
-        ---------------------------------------------------------------------->
+        <!--
+        таблица с задачами 
+        -------------------------------------------------------------------------->
         <table class="table table-bordered">
             <thead class>
                 <tr>
@@ -39,17 +17,27 @@
                 <tr v-for="(todo, index) in todos" :key="index">
                     <td v-bind:class="todo.uid" class="todo-uid">{{ todo.id }}</td>
                     <td
+                        class="description"
                         v-bind:class="todo.uid"
                         :id="todo.uid"
-                        v-on:dblclick="testAllert"
+                        v-on:dblclick="changeThisTask"
                     >{{ todo.desc }}</td>
-                    <td v-bind:class="todo.uid" class="complTask">
-                        <b-form-checkbox v-bind:class="todo.uid" switch size="lg"></b-form-checkbox>
-                        <!-- <span v-if="todo.is_completed">Выполнено</span>
-                        <span v-else>Не выполнено</span>-->
+                    <td
+                        class="isCompleted"
+                        v-bind:class="todo.uid"
+                        v-on:dblclick="changeThisTask">
+                        <b-form-checkbox
+                            v-bind:class="todo.uid"
+                            switch size="lg">
+                            </b-form-checkbox>
                     </td>
-                    <td v-bind:class="todo.uid" class="delTask">
-                        <button type="button" class="btn btn-danger btn-sm">X</button>
+                    <td
+                        class="isDeleted"
+                        v-bind:class="todo.uid"
+                        v-on:dblclick="changeThisTask">
+                        <button
+                            type="button"
+                            class="btn btn-danger btn-sm">X</button>
                     </td>
                 </tr>
             </tbody>
@@ -74,18 +62,42 @@ td {
 </style>
 
 <script>
-// import changeTask from "./changeTask.vue";
-
 export default {
+    data() {
+        return {
+            id: ""
+        };
+    },
     props: ["todos"],
     methods: {
-        testAllert(enent) {
-            console.log(event.target.id);
-            this.$refs.changeTodoModal.show();
+        // По двойному клику на задачу:
+        // - вычисляем id соотвествующей задачи и
+        // - передаем в родительский компонент команду на изменение задачи
+        changeThisTask(enent) {
+            this.id = event.target.id;
+            console.log(event);
+            console.log(`id = ${this.id}`);
+            this.$emit("changeThisTask", this.id);
+        },
+        removeThisTask(event) {
+            this.id = event.target.id;
+            this.$emit("removeThisTask", this.id);
+        },
+        completeThisTask(event) {
+            this.id = event.target.id;
+            this.$emit("completeThisTask", this.id);
         }
     },
-    components: {
-        // changetask: changeTask
-    }
+    components: {}
 };
 </script>
+
+
+
+
+
+
+// Доделать логику работы кликов по таблице:
+// Читаем с клика id задачи и класс столбца для принятия решения по конкретному методу
+// либо кидаем в подительский компонент событие на открытие модального окна с изменением задачи
+// либо посылкем PUT запрос на закрытие или удаление задачи

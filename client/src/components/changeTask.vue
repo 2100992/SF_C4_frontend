@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-modal ref="addTodoModal" id="todo-modal" title="Изменить задачу" hide-footer>
+        <b-modal ref="changeTodoModal" id="change-modal" title="Изменить задачу" hide-footer>
             <b-form @submit="onSubmit" @reset="onReset" class="w-100">
                 <b-form-group
                     id="form-description-group"
@@ -10,7 +10,7 @@
                     <b-form-input
                         id="form-description-input"
                         type="text"
-                        v-model="addTodoForm.description"
+                        v-model="changeTodoForm.description"
                         required
                         placeholder="Изменить задачу"
                     ></b-form-input>
@@ -29,7 +29,7 @@ import axios from "axios";
 export default {
     data() {
         return {
-            addTodoForm: {
+            changeTodoForm: {
                 description: ""
             }
             // todoListURL: "",
@@ -42,9 +42,9 @@ export default {
     methods: {
         onSubmit(event) {
             event.preventDefault();
-            this.$refs.addTodoModal.hide();
+            this.$refs.changeTodoModal.hide();
             const requestData = {
-                description: this.addTodoForm.description
+                description: this.changeTodoForm.description
             };
             axios
                 .post(this.todoListURL + this.userName, requestData)
