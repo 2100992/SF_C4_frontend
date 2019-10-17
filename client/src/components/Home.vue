@@ -75,6 +75,7 @@ export default {
             showNameRequest: false,
             todoListURL: todoListURL,
             id: "",
+            event: "",
 
         };
     },
@@ -116,9 +117,13 @@ export default {
                 this.showConfirmation = false;
             }, 2000);
         },
-        changeThisTask(id) {
-            this.id = id
-            console.log(`changeThisTask id = ${id}`);
+        changeThisTask(classList) {
+            console.log(classList);
+            this.id = classList[1];
+            this.event = classList[0];
+            console.log(`changeThisTask id = ${this.id}`);
+            console.log(`changeThisTask event = ${this.event}`);
+ 
         }
     },
 

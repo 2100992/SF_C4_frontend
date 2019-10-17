@@ -1,7 +1,7 @@
 <template>
     <div>
         <!--
-        таблица с задачами 
+        таблица с текущими задачами 
         -------------------------------------------------------------------------->
         <table class="table table-bordered">
             <thead class>
@@ -14,12 +14,14 @@
             </thead>
 
             <tbody>
-                <tr v-for="(todo, index) in todos" :key="index">
-                    <td v-bind:class="todo.uid" class="todo-uid">{{ todo.id }}</td>
+                <tr v-for="(todo, index) in todos" :key="index" v-bind:class="todo.uid">
+                    <td
+                        class="todo-id"
+                        v-bind:class="todo.uid"
+                    >{{ index + 1 }}</td>
                     <td
                         class="description"
                         v-bind:class="todo.uid"
-                        :id="todo.uid"
                         v-on:dblclick="changeThisTask"
                     >{{ todo.desc }}</td>
                     <td
@@ -54,9 +56,9 @@ td {
     text-align: left;
 }
 
-.todo-uid,
-.complTask,
-.delTask {
+.todo-id,
+.isCompleted,
+.isDeleted {
     text-align: center;
 }
 </style>
@@ -65,7 +67,8 @@ td {
 export default {
     data() {
         return {
-            id: ""
+            id: "",
+            tasksEvent: "",
         };
     },
     props: ["todos"],
@@ -74,19 +77,13 @@ export default {
         // - вычисляем id соотвествующей задачи и
         // - передаем в родительский компонент команду на изменение задачи
         changeThisTask(enent) {
-            this.id = event.target.id;
+            this.id = event.target.classList[1];
+            this.tasksEvent = event.target.classList[0],
             console.log(event);
             console.log(`id = ${this.id}`);
-            this.$emit("changeThisTask", this.id);
+            console.log(`event = ${this.tasksEvent}`);
+            this.$emit("changeThisTask", event.target.classList);
         },
-        removeThisTask(event) {
-            this.id = event.target.id;
-            this.$emit("removeThisTask", this.id);
-        },
-        completeThisTask(event) {
-            this.id = event.target.id;
-            this.$emit("completeThisTask", this.id);
-        }
     },
     components: {}
 };
