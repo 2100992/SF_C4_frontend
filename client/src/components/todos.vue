@@ -57,8 +57,7 @@
             placeholder="Завести задачу"
           ></b-form-input>
         </b-form-group>
-        <b-form-group id="form-complete-group">
-        </b-form-group>
+        <b-form-group id="form-complete-group"></b-form-group>
         <b-button type="submit" variant="primary">Добавить</b-button>
         <b-button type="reset" variant="danger">Сброс</b-button>
       </b-form>
@@ -118,8 +117,8 @@ export default {
       this.$refs.addTodoModal.hide();
       const requestData = {
         description: this.addTodoForm.description,
-        is_completed: this.addTodoForm.is_completed[0],
-        uid: uuid
+        is_completed: this.addTodoForm.is_completed[0]
+        // uid: uuid,
       };
       axios.post(todoListURL, requestData).then(() => {
         this.getTodos();
