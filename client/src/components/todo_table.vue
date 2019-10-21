@@ -34,7 +34,7 @@
               type="button"
               class="btn btn-danger btn-sm"
               size="lg"
-              v-on:click="doRemote(todo.uid)"
+              v-on:click="doRemote(todo.uid, todo.desc)"
             >X</button>
           </td>
         </tr>
@@ -94,8 +94,12 @@ export default {
       fullEvent.is_completed = !status;
       this.$emit("doComplete", fullEvent);
     },
-    doRemote(uid) {
-      this.$emit("doRemote", uid);
+    doRemote(uid, description) {
+      let fullEvent = {};
+      fullEvent.uid = uid;
+      fullEvent.is_deleted = true;
+      fullEvent.desc = description;
+      this.$emit("doRemote", fullEvent);
     }
   },
   components: {}

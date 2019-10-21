@@ -153,18 +153,44 @@ export default {
       console.log("home doComplete");
       console.log(event);
       axios
-        .put(`${todoListURL}${this.userName}`,event)
+        .put(`${todoListURL}${this.userName}`, event)
         .then(() => {
-          this.confirmationMessage = `Задача выполнена".`;
+          //   this.confirmationMessage = `Задача выполнена".`;
+          //   this.showConfirmation = true;
+          //   setTimeout(() => {
+          //   this.showConfirmation = false;
+          //   }, 2000);
+        })
+        .catch(error => {
+          this.confirmationMessage = `Ошибка подключения к серверу "${error}". Попробуйте позднее.`;
           this.showConfirmation = true;
           setTimeout(() => {
-          this.showConfirmation = false;
+            this.doComplete(event);
+            this.showConfirmation = false;
+          }, 15000);
+        });
+    },
+    doRemote(event) {
+      console.log("home doRemote");
+      console.log(event);
+      axios
+        .put(`${todoListURL}${this.userName}`, event)
+        .then(() => {
+          this.resetPage();
+          this.confirmationMessage = `Задача "${event.desc}" удалена.`;
+          this.showConfirmation = true;
+          setTimeout(() => {
+            this.showConfirmation = false;
           }, 2000);
         })
-    },
-    doRemote(uid) {
-      axios
-        .put()
+        .catch(error => {
+          this.confirmationMessage = `Ошибка подключения к серверу "${error}". Попробуйте позднее.`;
+          this.showConfirmation = true;
+          setTimeout(() => {
+            this.doRemote(event);
+            this.showConfirmation = false;
+          }, 15000);
+        });
     }
   },
 
