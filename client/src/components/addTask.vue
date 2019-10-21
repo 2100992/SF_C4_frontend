@@ -52,8 +52,8 @@ export default {
       };
       axios.post(this.url + this.userName, requestData).then(() => {
         this.$emit("addedTask", this.addTodoForm.description);
-        this.resetForm();
       });
+      this.resetForm();
     },
     onReset(event) {
       event.preventDefault();

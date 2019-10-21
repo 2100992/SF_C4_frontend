@@ -5,7 +5,7 @@
       id="change-modal"
       title="Изменить задачу"
       hide-footer
-      v-model="show"
+      v-model="showModal"
     >
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
         <b-form-group
@@ -35,14 +35,15 @@ import axios from "axios";
 export default {
   data() {
     return {
+      // showModal: false,
       changeTodoForm: {
         description: "",
-        uid: "",
+        uid: ""
       }
     };
   },
 
-  props: ["taskID", "show", "url", "oldDescription", "userName"],
+  props: ["taskID", "show", "oldDescription"],
 
   methods: {
     // todo: вынести этот функционал в родительский компонент
@@ -54,21 +55,38 @@ export default {
         description: this.oldDescription,
         uid: this.taskID
       };
-      axios.put(this.url + this.userName, requestData).then(() => {
-        this.$emit("changedTask", requestData.description);
-        this.resetForm();
-      });
+      this.$emit("changedTask", requestData);
     },
     onReset(event) {
       console.log("changeTask onReset");
       event.preventDefault();
       this.resetForm();
+      this.showModal = false;
     },
     resetForm() {
       console.log("changeTask resetForm");
       this.changeTodoForm.description = "";
       // this.addTodoForm.is_completed = [];
     }
+  },
+  computed: {
+    showModal: {
+      get: function() {
+        return this.show;
+      },
+      set: function(val) {
+        console.log(val);
+        this.$emit("closeModal")
+      }
+    }
   }
+
+  // watch: {
+  //   show: {
+  //     function(val) {
+  //       console.log(`watch show=${val}`);
+  //     }
+  //   }
+  // }
 };
 </script>

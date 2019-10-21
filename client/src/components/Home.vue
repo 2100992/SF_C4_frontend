@@ -18,11 +18,10 @@
     -------------------------------------------------------------------------->
     <changetask
       :taskID="taskID"
-      :userName="userName"
       :show="showChangeTaskModal"
-      :url="todoListURL"
       :oldDescription="this.oldDescription"
       v-on:changedTask="changedTask"
+      v-on:closeModal="showChangeTaskModal = false"
     ></changetask>
     <!------------------------------------------------------------------------>
     <!-- 
@@ -117,6 +116,9 @@ export default {
       this.getUserName();
       console.log(`Получили событие resetPage`);
     },
+
+    // Получаем событие из модального окна компонента addTask
+    // Выводим сообщение о добавленной задаче и через время скрываем его
     addedTask(desctiption) {
       this.resetPage();
       this.confirmationMessage = `Задача "${desctiption}" добавлена`;
@@ -125,29 +127,54 @@ export default {
         this.showConfirmation = false;
       }, 2000);
     },
+
+    // Метод хорошо бы переделать.
+    // Получаем это событие из таблицы с задачами (двойной клик по описанию задачи)
+    // По событию открываем модальное окно компонента changeTask
     changeThisTask(event) {
-      console.log(`home changeThisTask`);
-      console.log(event);
+      // console.log(`home changeThisTask`);
+      // console.log(event);
       this.taskID = event.taskID;
       this.taskEvent = event.taskEvent;
       this.oldDescription = event.description;
 
-      console.log(`changeThisTask id = ${this.taskID}`);
-      console.log(`changeThisTask event = ${this.taskEvent}`);
-      console.log(`oldDesctiption = ${this.oldDescription}`);
+      // console.log(`changeThisTask id = ${this.taskID}`);
+      // console.log(`changeThisTask event = ${this.taskEvent}`);
+      // console.log(`oldDesctiption = ${this.oldDescription}`);
       if (this.taskEvent.includes("description")) {
         this.taskDescription = event.description;
         this.showChangeTaskModal = true;
+        // !!!!!!!!
+        // ToDo: решить проблему с повторным открытием модала!!!!
+        // !!!!!!!!
       }
     },
-    changedTask(desctiption) {
+    // Событие получаем после заполнения формы компонента changeTask
+    changedTask(requestData) {
       this.showChangeTaskModal = false;
-      this.resetPage();
-      this.confirmationMessage = `Задача "${this.oldDescription}" изменена на "${desctiption}".`;
-      this.showConfirmation = true;
-      setTimeout(() => {
-        this.showConfirmation = false;
-      }, 2000);
+      axios
+        .put(`${todoListURL}${this.userName}`, requestData)
+        .then(() => {
+          this.resetPage();
+          this.confirmationMessage = `Задача "${this.oldDescription}" изменена на "${requestData.description}".`;
+          this.showConfirmation = true;
+          setTimeout(() => {
+            this.showConfirmation = false;
+          }, 2000);
+          //   this.confirmationMessage = `Задача выполнена".`;
+          //   this.showConfirmation = true;
+          //   setTimeout(() => {
+          //   this.showConfirmation = false;
+          //   }, 2000);
+        })
+        .catch(error => {
+          this.confirmationMessage = `Ошибка подключения к серверу "${error}". Попробуйте позднее.`;
+          this.showConfirmation = true;
+          setTimeout(() => {
+            this.doComplete(event);
+            this.showConfirmation = false;
+          }, 15000);
+        });
     },
     doComplete(event) {
       console.log("home doComplete");
