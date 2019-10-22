@@ -1,11 +1,12 @@
 <template>
   <div>
-    <button
+    <b-button
       type="button"
       id="task-add"
-      class="btn btn-success btn-sm align-left d-block"
+      class="btn btn-sm align-left d-block w-100"
+      variant="outline-secondary"
       v-b-modal.todo-modal
-    >Добавить задачу</button>
+    >Добавить задачу</b-button>
     <b-modal ref="addTodoModal" id="todo-modal" title="Добавить задачу" hide-footer>
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
         <b-form-group
@@ -51,7 +52,7 @@ export default {
         description: this.addTodoForm.description
       };
       axios.post(this.url + this.userName, requestData).then(() => {
-        this.$emit("addedTask", this.addTodoForm.description);
+        this.$emit("addedTask", requestData.description);
       });
       this.resetForm();
     },

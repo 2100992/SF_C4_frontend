@@ -6,6 +6,10 @@
         - выводим форму, если имя неизвестно. по вооду сохраняем его в LS
     -------------------------------------------------------------------------->
     <username :name="userName" :showCollapse="showNameRequest" v-on:resetPage="resetPage"></username>
+    <div v-if="userName">
+      <p>Задач в вашем списке - {{ todosCounter }}</p>
+      <p>Из них пока не выполнено - {{ uncompleteTodosCounter }}</p>
+    </div>
     <!------------------------------------------------------------------------>
     <!-- 
         Компонент выводящий модальное окно с формой для заведения новой задачи
@@ -30,7 +34,11 @@
         ("задача добавлена", "задача удалена", "ошибка сервера")
         -------------------------------------------------------------------- 
     -->
-    <confirmation :message="confirmationMessage" :showCollapse="showConfirmation"></confirmation>
+    <confirmation
+      :message="confirmationMessage"
+      :showCollapse="showConfirmation"
+      v-on:hideConfirmation="hideConfirmation"
+    ></confirmation>
     <!------------------------------------------------------------------------>
     <!-- 
         Компонент таблицы с задачами
@@ -49,7 +57,10 @@
   </div>
 </template>
 
-<style lang="less" scoped>
+<style scoped>
+p {
+  text-align: left;
+}
 </style>
 
 <script>
@@ -68,6 +79,8 @@ export default {
   data() {
     return {
       todos: {},
+      todosCounter: 0,
+      uncompleteTodosCounter: 0,
       confirmationMessage: "",
       showConfirmation: false,
       showNameRequest: false,
@@ -102,6 +115,8 @@ export default {
         .get(`${todoListURL}${this.userName}`)
         .then(response => {
           this.todos = response.data.tasks;
+          this.todosCounter = this.todos.length;
+          this.uncompleteTodosCounter = this.getUncompleteTodosCounter();
         })
         .catch(error => {
           this.confirmationMessage = `Ошибка подключения к серверу "${error}". Попробуйте позднее.`;
@@ -109,7 +124,7 @@ export default {
           setTimeout(() => {
             this.getTodos();
             this.showConfirmation = false;
-          }, 15000);
+          }, 20000);
         });
     },
     resetPage() {
@@ -125,7 +140,7 @@ export default {
       this.showConfirmation = true;
       setTimeout(() => {
         this.showConfirmation = false;
-      }, 2000);
+      }, 20000);
     },
 
     // Метод хорошо бы переделать.
@@ -160,7 +175,7 @@ export default {
           this.showConfirmation = true;
           setTimeout(() => {
             this.showConfirmation = false;
-          }, 2000);
+          }, 20000);
           //   this.confirmationMessage = `Задача выполнена".`;
           //   this.showConfirmation = true;
           //   setTimeout(() => {
@@ -182,6 +197,7 @@ export default {
       axios
         .put(`${todoListURL}${this.userName}`, event)
         .then(() => {
+          this.uncompleteTodosCounter = this.getUncompleteTodosCounter();
           //   this.confirmationMessage = `Задача выполнена".`;
           //   this.showConfirmation = true;
           //   setTimeout(() => {
@@ -194,7 +210,7 @@ export default {
           setTimeout(() => {
             this.doComplete(event);
             this.showConfirmation = false;
-          }, 15000);
+          }, 20000);
         });
     },
     doRemote(event) {
@@ -208,7 +224,7 @@ export default {
           this.showConfirmation = true;
           setTimeout(() => {
             this.showConfirmation = false;
-          }, 2000);
+          }, 20000);
         })
         .catch(error => {
           this.confirmationMessage = `Ошибка подключения к серверу "${error}". Попробуйте позднее.`;
@@ -216,8 +232,20 @@ export default {
           setTimeout(() => {
             this.doRemote(event);
             this.showConfirmation = false;
-          }, 15000);
+          }, 20000);
         });
+    },
+    hideConfirmation() {
+      this.showConfirmation = false;
+    },
+    getUncompleteTodosCounter() {
+      let counter = 0;
+      for (let index in this.todos) {
+        if (this.todos[index].is_completed === false) {
+          counter++;
+        }
+      }
+      return counter;
     }
   },
 

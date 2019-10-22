@@ -23,7 +23,7 @@
         </b-form-group>
         <b-form-group id="form-complete-group"></b-form-group>
         <b-button type="submit" variant="primary">Изменить</b-button>
-        <b-button type="reset" variant="danger">Сброс</b-button>
+        <b-button type="reset" variant="danger">Отмена</b-button>
       </b-form>
     </b-modal>
   </div>
